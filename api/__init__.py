@@ -11,6 +11,7 @@ db = SQLAlchemy(app)
 api = Api(app)
 
 from api.users.models import *
+from api.polls.models import *
 
 # Load User Endpoints
 from api.users.resources import UsersList, UserItem
