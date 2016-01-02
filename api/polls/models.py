@@ -18,5 +18,8 @@ class Choice(db.Model):
     text = db.Column(db.String(140), nullable=False)
     poll_id = db.Column(db.Integer, db.ForeignKey('poll.id'))
 
+    def __init(self, text):
+        self.text = text
+
     def __repr__(self):
         return "<Choice: {}>".format(self.text)
