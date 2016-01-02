@@ -4,6 +4,7 @@ from api import db
 class Poll(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(140), nullable=False)
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
     choices = db.relationship('Choice', backref='poll')
 
     def __init__(self, text):
