@@ -1,9 +1,10 @@
 from fabric.api import *
 
-user = "vagrant"
-host = "10.10.10.6"
+env.use_ssh_config = True
+env.user = "vagrant"
+env.host = "10.10.10.6"
 
-connection = "%s@%s" % (user, host)
+connection = "%s@%s" % (env.user, env.host)
 virtualenv = "/var/apienv"
 root = "/var/api"
 
