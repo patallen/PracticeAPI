@@ -17,3 +17,7 @@ from api.polls.models import *
 from api.users.resources import UsersList, UserItem
 api.add_resource(UsersList, '/users')
 api.add_resource(UserItem, '/user/<username>')
+
+from api.polls.resources import PollItem, PollsList
+api.add_resource(PollItem, '/poll/<poll_id>')
+api.add_resource(PollsList, '/polls')
