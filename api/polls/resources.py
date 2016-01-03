@@ -29,6 +29,15 @@ class PollItem(Resource):
         poll = Poll.query.get(poll_id)
         return poll
 
+    @marshal_with(poll_fields)
+    def put(self, poll_id):
+        args = poll_parser.parse_args()
+        poll = Poll.query.get(poll_id)
+        poll.text = args.text
+        db.session.add(poll)
+        db.session.commit()
+        return poll
+
 
 class PollsList(Resource):
 

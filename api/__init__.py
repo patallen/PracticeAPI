@@ -16,8 +16,8 @@ from api.polls.models import *
 # Load User Endpoints
 from api.users.resources import UsersList, UserItem
 api.add_resource(UsersList, '/users')
-api.add_resource(UserItem, '/user/<username>')
+api.add_resource(UserItem, '/users/<username>')
 
 from api.polls.resources import PollItem, PollsList
-api.add_resource(PollItem, '/poll/<poll_id>')
+api.add_resource(PollItem, '/polls/<poll_id>')
 api.add_resource(PollsList, '/polls')
