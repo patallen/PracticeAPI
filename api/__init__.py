@@ -14,10 +14,11 @@ from api.users.models import *
 from api.polls.models import *
 
 # Load User Endpoints
-from api.users.resources import UsersList, UserItem
-api.add_resource(UsersList, '/users', endpoint='users')
-api.add_resource(UserItem, '/users/<username>', endpoint='user')
+from api.users.resources import UserListAPI, UserAPI
+api.add_resource(UserListAPI, '/users', endpoint='users')
+api.add_resource(UserAPI, '/users/<username>', endpoint='user')
 
+# Load Poll/Choice Endpoints
 from api.polls.resources import PollAPI, PollListAPI, ChoiceAPI, ChoiceListAPI
 api.add_resource(PollListAPI, '/polls', endpoint='polls')
 api.add_resource(PollAPI, '/polls/<int:id>', endpoint='poll')
