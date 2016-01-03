@@ -15,10 +15,20 @@ class User(db.Model):
 
     @password.setter
     def password(self, password):
-        self._password_hash = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
+        self._password_hash = bcrypt.hashpw(
+            password.encode('UTF-8'),
+            bcrypt.gensalt()
+        )
 
     def verify_password(self, password):
         return bcrypt.hashpw(password, str(self.password)) == self.password
+
+    @classmethod
+    def create(cls, username, email, password):
+        user = cls(username, email, password)
+        db.session.add(user)
+        db.session.commit()
+        return user
 
     def __init__(self, username, email, password):
         self.username = username

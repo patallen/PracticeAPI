@@ -1,4 +1,3 @@
-from api import db
 from flask_restful import Resource, marshal_with, fields, reqparse
 from api.users.models import User
 
@@ -38,9 +37,7 @@ class UserListAPI(Resource):
     @marshal_with(user_fields)
     def post(self):
         args = user_parser.parse_args()
-        user = User(args.username, args.email, args.password)
-        db.session.add(user)
-        db.session.commit()
+        user = User.create(args.username, args.email, args.password)
         return user
 
 
