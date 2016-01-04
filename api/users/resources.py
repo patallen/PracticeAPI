@@ -40,7 +40,7 @@ class UserListAPI(Resource):
         user = User.create(
             username=args.username,
             email=args.email,
-            password=args.password
+            password=args.password,
         )
         return user, 201
 

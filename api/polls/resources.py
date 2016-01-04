@@ -35,8 +35,7 @@ class PollAPI(Resource):
         args = poll_parser.parse_args()
         poll = Poll.query.get(id)
         poll.text = args.text
-        db.session.add(poll)
-        db.session.commit()
+        poll.save()
         return poll, 200
 
 
