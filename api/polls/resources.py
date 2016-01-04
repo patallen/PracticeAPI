@@ -37,7 +37,7 @@ class PollAPI(Resource):
         poll.text = args.text
         db.session.add(poll)
         db.session.commit()
-        return poll
+        return poll, 200
 
 
 class PollListAPI(Resource):
@@ -52,7 +52,7 @@ class PollListAPI(Resource):
         poll = Poll(text=args.text)
         db.session.add(poll)
         db.session.commit()
-        return poll
+        return poll, 201
 
 
 class ChoiceAPI(Resource):

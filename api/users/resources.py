@@ -38,7 +38,7 @@ class UserListAPI(Resource):
     def post(self):
         args = user_parser.parse_args()
         user = User.create(args.username, args.email, args.password)
-        return user
+        return user, 201
 
 
 class UserAPI(Resource):
