@@ -1,8 +1,9 @@
 from api import db
+from api.utils.mixins import BaseMixin
 import bcrypt
 
 
-class User(db.Model):
+class User(BaseMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(80), unique=True, nullable=False)
@@ -22,13 +23,6 @@ class User(db.Model):
 
     def verify_password(self, password):
         return bcrypt.hashpw(password, str(self.password)) == self.password
-
-    @classmethod
-    def create(cls, username, email, password):
-        user = cls(username, email, password)
-        db.session.add(user)
-        db.session.commit()
-        return user
 
     def __init__(self, username, email, password):
         self.username = username

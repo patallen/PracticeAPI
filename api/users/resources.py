@@ -37,7 +37,11 @@ class UserListAPI(Resource):
     @marshal_with(user_fields)
     def post(self):
         args = user_parser.parse_args()
-        user = User.create(args.username, args.email, args.password)
+        user = User.create(
+            username=args.username,
+            email=args.email,
+            password=args.password
+        )
         return user, 201
 
 

@@ -1,7 +1,8 @@
 from api import db
+from api.utils.mixins import BaseMixin
 
 
-class Poll(db.Model):
+class Poll(BaseMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(140), nullable=False)
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -14,7 +15,7 @@ class Poll(db.Model):
         return "<Poll: {}>".format(self.text)
 
 
-class Choice(db.Model):
+class Choice(BaseMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(140), nullable=False)
     poll_id = db.Column(db.Integer, db.ForeignKey('poll.id'))

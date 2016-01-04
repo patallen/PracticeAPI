@@ -49,9 +49,7 @@ class PollListAPI(Resource):
     @marshal_with(poll_fields)
     def post(self):
         args = poll_parser.parse_args()
-        poll = Poll(text=args.text)
-        db.session.add(poll)
-        db.session.commit()
+        poll = Poll.create(text=args.text)
         return poll, 201
 
 
