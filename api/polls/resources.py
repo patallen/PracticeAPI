@@ -22,6 +22,14 @@ poll_parser.add_argument(
     required=True
 )
 
+choice_parser = reqparse.RequestParser()
+choice_parser.add_argument(
+    'text',
+    dest='text',
+    location='form',
+    required=True
+)
+
 
 class PollAPI(Resource):
 
@@ -63,3 +71,12 @@ class ChoiceListAPI(Resource):
     @marshal_with(choice_fields)
     def get(self, id):
         return Poll.query.get(id).choices
+
+    @marshal_with(choice_fields)
+    def post(self, id):
+        args = choice_parser.parse_args()
+        poll = Poll.query.get(id)
+        choice = Choice.create(text=args.text, commit=False)
+        poll.choices.append(choice)
+        db.session.commit()
+        return choice
