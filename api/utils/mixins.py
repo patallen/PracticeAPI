@@ -18,6 +18,17 @@ class BaseMixin(object):
             abort(404)
         return rv
 
+    @classmethod
+    def get_by_or_abort404(cls, **kwargs):
+        rv = cls.filter(**kwargs)
+        if rv is None:
+            abort(404)
+        return rv[0]
+
+    @classmethod
+    def filter(cls, **kwargs):
+        return cls.query.filter_by(**kwargs).all()
+
     def save(self, commit=True):
         db.session.add(self)
         if commit:

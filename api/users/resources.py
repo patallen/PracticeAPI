@@ -49,5 +49,5 @@ class UserAPI(Resource):
 
     @marshal_with(user_fields)
     def get(self, username):
-        user = User.query.filter_by(username=username).one()
+        user = User.get_by_or_abort404(username=username)
         return user
