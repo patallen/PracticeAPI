@@ -27,7 +27,10 @@ class BaseMixin(object):
 
     @classmethod
     def filter(cls, **kwargs):
-        return cls.query.filter_by(**kwargs).all()
+        query = cls.query.filter_by(**kwargs)
+        if kwargs.get('single', False):
+            return query.first()
+        return query.all()
 
     def save(self, commit=True):
         db.session.add(self)

@@ -19,7 +19,7 @@ class User(BaseMixin, db.Model):
 
     @property
     def password(self):
-        return self._password_hash
+        return self._password_hash.encode('UTF-8')
 
     @password.setter
     def password(self, password):
@@ -29,7 +29,9 @@ class User(BaseMixin, db.Model):
         )
 
     def verify_password(self, password):
-        return bcrypt.hashpw(password, str(self.password)) == self.password
+        return bcrypt.hashpw(
+            password.encode('UTF-8'), self.password
+        ) == self.password
 
     def __init__(self, username, email, password):
         self.username = username

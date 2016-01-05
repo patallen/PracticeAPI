@@ -1,4 +1,5 @@
-from flask_restful import Resource, marshal_with, fields, reqparse
+import json
+from flask_restful import Resource, marshal_with, fields, reqparse, abort
 from api.users.models import User
 
 user_fields = {
@@ -21,6 +22,20 @@ user_parser.add_argument(
     required=True
 )
 user_parser.add_argument(
+    'password',
+    dest='password',
+    location='form',
+    required=True
+)
+
+signin_parser = reqparse.RequestParser()
+signin_parser.add_argument(
+    'username',
+    dest='username',
+    location='form',
+    required=True
+)
+signin_parser.add_argument(
     'password',
     dest='password',
     location='form',
@@ -51,3 +66,13 @@ class UserAPI(Resource):
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
         return user
+
+
+class UserAuthAPI(Resource):
+    def post(self):
+        args = signin_parser.parse_args()
+        user = User.filter(username=args.username)[0]
+        if user:
+            if user.verify_password(args.password):
+                return {"token": "Bearer thisisatokenher"}
+        abort(403, "Incorrect username or password.")
