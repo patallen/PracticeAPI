@@ -46,6 +46,11 @@ class PollAPI(Resource):
         poll.save()
         return poll, 200
 
+    def delete(self, id):
+        poll = Poll.query.get(id)
+        poll.delete()
+        return 200
+
 
 class PollListAPI(Resource):
 
@@ -65,6 +70,11 @@ class ChoiceAPI(Resource):
     @marshal_with(choice_fields)
     def get(self, id):
         return Choice.query.get(id)
+
+    def delete(self, id):
+        choice = Choice.query.get(id)
+        choice.delete()
+        return 200
 
 
 class ChoiceListAPI(Resource):
