@@ -1,4 +1,5 @@
 from api import db
+from flask_restful import abort
 
 
 class BaseMixin(object):
@@ -9,6 +10,13 @@ class BaseMixin(object):
         if commit:
             db.session.commit()
         return user
+
+    @classmethod
+    def get_or_abort404(cls, id):
+        rv = cls.query.get(id)
+        if rv is None:
+            abort(404)
+        return rv
 
     def save(self, commit=True):
         db.session.add(self)

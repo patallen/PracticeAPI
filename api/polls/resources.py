@@ -35,19 +35,19 @@ class PollAPI(Resource):
 
     @marshal_with(poll_fields)
     def get(self, id):
-        poll = Poll.query.get(id)
+        poll = Poll.get_or_abort404(id)
         return poll
 
     @marshal_with(poll_fields)
     def put(self, id):
         args = poll_parser.parse_args()
-        poll = Poll.query.get(id)
+        poll = Poll.get_or_abort404(id)
         poll.text = args.text
         poll.save()
         return poll, 200
 
     def delete(self, id):
-        poll = Poll.query.get(id)
+        poll = Poll.get_or_abort404(id)
         poll.delete()
         return 200
 
@@ -69,10 +69,11 @@ class ChoiceAPI(Resource):
 
     @marshal_with(choice_fields)
     def get(self, id):
-        return Choice.query.get(id)
+        choice = Choice.get_or_abort404(id)
+        return choice
 
     def delete(self, id):
-        choice = Choice.query.get(id)
+        choice = Choice.get_or_abort404(id)
         choice.delete()
         return 200
 
@@ -80,7 +81,8 @@ class ChoiceAPI(Resource):
 class ChoiceListAPI(Resource):
     @marshal_with(choice_fields)
     def get(self, id):
-        return Poll.query.get(id).choices
+        choices = Poll.get_or_abort404(id).choices
+        return choices
 
     @marshal_with(choice_fields)
     def post(self, id):
