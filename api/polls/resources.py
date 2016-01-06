@@ -1,5 +1,5 @@
 from api import db
-from flask_restful import Resource, marshal_with, fields, reqparse
+from flask_restful import Resource, marshal_with, fields, reqparse, abort
 from api.polls.models import Choice, Poll
 
 
@@ -65,23 +65,29 @@ class PollListAPI(Resource):
         return poll, 201
 
 
-class ChoiceAPI(Resource):
+class PollChoiceAPI(Resource):
 
     @marshal_with(choice_fields)
-    def get(self, id):
+    def get(self, poll_id, id):
         choice = Choice.get_or_abort404(id)
-        return choice
+        poll = choice.poll
+        if poll.id == poll_id:
+            return choice
+        abort(404)
 
-    def delete(self, id):
+    def delete(self, poll_id, id):
         choice = Choice.get_or_abort404(id)
-        choice.delete()
-        return 200
+        poll = choice.poll
+        if poll.id == poll_id:
+            choice.delete()
+            return 200
+        abort(404)
 
 
-class ChoiceListAPI(Resource):
+class PollChoiceListAPI(Resource):
     @marshal_with(choice_fields)
     def get(self, id):
-        choices = Poll.get_or_abort404(id).choices
+        choices = Poll.get_or_abort404(id).choices.all()
         return choices
 
     @marshal_with(choice_fields)
@@ -92,8 +98,3 @@ class ChoiceListAPI(Resource):
         poll.choices.append(choice)
         db.session.commit()
         return choice
-
-    def delete(self, id):
-        choice = Choice.get_or_abort404(id)
-        choice.delete()
-        return 200

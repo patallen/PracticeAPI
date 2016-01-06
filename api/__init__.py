@@ -20,13 +20,19 @@ api.add_resource(UserAPI, '/users/<username>', endpoint='user')
 api.add_resource(UserAuthAPI, '/users/authenticate', endpoint='user_auth')
 
 # Load Poll/Choice Endpoints
-from api.polls.resources import PollAPI, PollListAPI, ChoiceAPI, ChoiceListAPI
+from api.polls.resources import (
+    PollAPI, PollListAPI, PollChoiceAPI, PollChoiceListAPI
+)
 api.add_resource(PollListAPI, '/polls', endpoint='polls')
 api.add_resource(PollAPI, '/polls/<int:id>', endpoint='poll')
 
-api.add_resource(ChoiceAPI, '/choice/<int:id>', endpoint='choice')
 api.add_resource(
-    ChoiceListAPI,
+    PollChoiceAPI,
+    '/polls/<int:poll_id>/choices/<int:id>',
+    endpoint='choice'
+)
+api.add_resource(
+    PollChoiceListAPI,
     '/polls/<int:id>/choices',
     endpoint='poll_choices'
 )
