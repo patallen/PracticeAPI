@@ -1,4 +1,3 @@
-import json
 from flask_restful import Resource, marshal_with, fields, reqparse, abort
 from api.users.models import User
 

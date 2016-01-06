@@ -92,3 +92,8 @@ class ChoiceListAPI(Resource):
         poll.choices.append(choice)
         db.session.commit()
         return choice
+
+    def delete(self, id):
+        choice = Choice.get_or_abort404(id)
+        choice.delete()
+        return 200
