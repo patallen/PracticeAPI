@@ -1,11 +1,7 @@
-from flask_restful import Resource, marshal_with, fields, reqparse, abort
+from flask_restful import Resource, reqparse, abort
 from api.users.models import User
+from api.users.schemas import UserSchema
 
-user_fields = {
-    'username': fields.String,
-    'email': fields.String,
-    'uri': fields.Url('user')
-}
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument(
@@ -44,11 +40,9 @@ signin_parser.add_argument(
 
 class UserListAPI(Resource):
 
-    @marshal_with(user_fields)
     def get(self):
-        return User.query.all()
+        return UserSchema(many=True).dump(User.query.all()).data
 
-    @marshal_with(user_fields)
     def post(self):
         args = user_parser.parse_args()
         user = User.create(
@@ -56,15 +50,14 @@ class UserListAPI(Resource):
             email=args.email,
             password=args.password,
         )
-        return user, 201
+        return UserSchema().dump(user).data, 201
 
 
 class UserAPI(Resource):
 
-    @marshal_with(user_fields)
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
-        return user
+        return UserSchema().dump(user).data, 200
 
 
 class UserAuthAPI(Resource):
