@@ -2,41 +2,8 @@ from api import db
 from flask_restful import Resource, marshal_with, fields, reqparse, abort
 from api.polls.models import Choice, Poll
 
-from marshmallow_jsonapi import Schema, fields as flds
+from api.polls.schemas import PollSchema, ChoiceSchema
 
-
-class PollSchema(Schema):
-    id = flds.Str(dump_only=True)
-    text = flds.Str()
-
-    choices = flds.Relationship(
-        related_url='/polls/{poll_id}/choices',
-        related_url_kwargs={'poll_id': '<id>'},
-        # Include resource linkage
-        many=True, include_data=True,
-        type_='choices'
-    )
-
-    class Meta:
-        type_ = 'polls'
-        strict = True
-
-
-class ChoiceSchema(Schema):
-    id = flds.Str(dump_only=True)
-    text = flds.Str()
-
-    poll = flds.Relationship(
-        related_url='/polls/{poll_id}',
-        related_url_kwargs={'poll_id': '<poll.id>'},
-        # Include resource linkage
-        include_data=True,
-        type_='polls'
-    )
-
-    class Meta:
-        type_ = 'choices'
-        strict = True
 
 choice_fields = {
     'text': fields.String,
