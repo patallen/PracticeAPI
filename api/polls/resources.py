@@ -80,6 +80,13 @@ class PollListAPI(Resource):
         return PollSchema().dump(poll).data, 201
 
 
+class ChoiceAPI(Resource):
+    @marshal_with(choice_fields)
+    def get(self, id):
+        choice = Choice.get_or_abort404(id)
+        return choice
+
+
 class PollChoiceAPI(Resource):
 
     @marshal_with(choice_fields)
