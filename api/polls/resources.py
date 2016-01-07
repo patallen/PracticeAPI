@@ -16,10 +16,27 @@ class PollSchema(Schema):
         many=True, include_data=True,
         type_='choices'
     )
+
     class Meta:
         type_ = 'polls'
         strict = True
 
+
+class ChoiceSchema(Schema):
+    id = flds.Str(dump_only=True)
+    text = flds.Str()
+
+    poll = flds.Relationship(
+        related_url='/polls/{poll_id}',
+        related_url_kwargs={'poll_id': '<poll.id>'},
+        # Include resource linkage
+        include_data=True,
+        type_='polls'
+    )
+
+    class Meta:
+        type_ = 'choices'
+        strict = True
 
 choice_fields = {
     'text': fields.String,
@@ -81,10 +98,9 @@ class PollListAPI(Resource):
 
 
 class ChoiceAPI(Resource):
-    @marshal_with(choice_fields)
     def get(self, id):
         choice = Choice.get_or_abort404(id)
-        return choice
+        return ChoiceSchema().dump(choice).data, 200
 
 
 class PollChoiceAPI(Resource):
@@ -107,10 +123,9 @@ class PollChoiceAPI(Resource):
 
 
 class PollChoiceListAPI(Resource):
-    @marshal_with(choice_fields)
     def get(self, id):
         choices = Poll.get_or_abort404(id).choices.all()
-        return choices
+        return ChoiceSchema(many=True).dump(choices).data
 
     @marshal_with(choice_fields)
     def post(self, id):
