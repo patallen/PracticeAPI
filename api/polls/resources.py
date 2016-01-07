@@ -2,6 +2,24 @@ from api import db
 from flask_restful import Resource, marshal_with, fields, reqparse, abort
 from api.polls.models import Choice, Poll
 
+from marshmallow_jsonapi import Schema, fields as flds
+
+
+class PollSchema(Schema):
+    id = flds.Str(dump_only=True)
+    text = flds.Str()
+
+    choices = flds.Relationship(
+        related_url='/polls/{poll_id}/choices',
+        related_url_kwargs={'poll_id': '<id>'},
+        # Include resource linkage
+        many=True, include_data=True,
+        type_='choices'
+    )
+    class Meta:
+        type_ = 'polls'
+        strict = True
+
 
 choice_fields = {
     'text': fields.String,
@@ -33,36 +51,33 @@ choice_parser.add_argument(
 
 class PollAPI(Resource):
 
-    @marshal_with(poll_fields)
     def get(self, id):
         poll = Poll.get_or_abort404(id)
-        return poll
+        return PollSchema().dump(poll).data
 
-    @marshal_with(poll_fields)
     def put(self, id):
         args = poll_parser.parse_args()
         poll = Poll.get_or_abort404(id)
         poll.text = args.text
         poll.save()
-        return poll, 200
+        return PollSchema().dump(poll).data, 200
 
     def delete(self, id):
         poll = Poll.get_or_abort404(id)
         poll.delete()
-        return 200
+        return {}, 200
 
 
 class PollListAPI(Resource):
 
-    @marshal_with(poll_fields)
     def get(self):
-        return Poll.query.all()
+        polls = Poll.query.all()
+        return PollSchema(many=True).dump(polls).data
 
-    @marshal_with(poll_fields)
     def post(self):
         args = poll_parser.parse_args()
         poll = Poll.create(text=args.text)
-        return poll, 201
+        return PollSchema().dump(poll).data, 201
 
 
 class PollChoiceAPI(Resource):
