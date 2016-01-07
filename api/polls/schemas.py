@@ -20,7 +20,7 @@ class PollSchema(Schema):
 class ChoiceSchema(Schema):
     id = fields.Str(dump_only=True)
     text = fields.Str()
-
+    votes = fields.Integer()
     poll = fields.Relationship(
         related_url='/polls/{poll_id}',
         related_url_kwargs={'poll_id': '<poll.id>'},
