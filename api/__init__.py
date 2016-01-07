@@ -10,6 +10,12 @@ db = SQLAlchemy(app)
 
 api = Api(app)
 
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
 from api.users.models import *
 from api.polls.models import *
 
