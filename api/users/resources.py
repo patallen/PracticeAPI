@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse, abort
 from api.users.models import User
 from api.users.schemas import UserSchema
+from api.utils.decorators import use_schema
 
 
 user_parser = reqparse.RequestParser()
@@ -39,9 +40,9 @@ signin_parser.add_argument(
 
 
 class UserListAPI(Resource):
-
+    @use_schema(UserSchema, many=True)
     def get(self):
-        return UserSchema(many=True).dump(User.query.all()).data
+        return User.query.all()
 
     def post(self):
         args = user_parser.parse_args()
