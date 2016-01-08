@@ -44,6 +44,7 @@ class UserListAPI(Resource):
     def get(self):
         return User.query.all()
 
+    @use_schema(UserSchema, many=False)
     def post(self):
         args = user_parser.parse_args()
         user = User.create(
@@ -51,7 +52,7 @@ class UserListAPI(Resource):
             email=args.email,
             password=args.password,
         )
-        return UserSchema().dump(user).data, 201
+        return user, 201
 
 
 class UserAPI(Resource):

@@ -1,7 +1,7 @@
 def use_schema(schema, many=False):
     def wrap(f):
         def wrapped_function(*args, **kwargs):
-            print(many)
-            return schema(many=many).dump(f(*args, **kwargs)).data
+            obj, status = f(*args, **kwargs)
+            return schema(many=many).dump(obj).data, status
         return wrapped_function
     return wrap
