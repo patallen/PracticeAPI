@@ -56,10 +56,10 @@ class UserListAPI(Resource):
 
 
 class UserAPI(Resource):
-
+    @use_schema(UserSchema, many=False)
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
-        return UserSchema().dump(user).data, 200
+        return user, 200
 
 
 class UserAuthAPI(Resource):
