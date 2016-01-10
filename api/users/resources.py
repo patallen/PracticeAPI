@@ -1,7 +1,6 @@
 from flask_restful import Resource, reqparse, abort
 from api.users.models import User
 from api.users.schemas import UserSchema
-from api.polls.schemas import PollSchema
 from api.utils.decorators import use_schema
 
 
