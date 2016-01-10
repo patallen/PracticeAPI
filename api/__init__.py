@@ -24,3 +24,8 @@ from api.users.resources import UserListAPI, UserAPI, UserAuthAPI
 api.add_resource(UserListAPI, '/users', endpoint='users')
 api.add_resource(UserAPI, '/users/<username>', endpoint='user')
 api.add_resource(UserAuthAPI, '/users/authenticate', endpoint='user_auth')
+
+# Load Todo Endpoints
+from api.todos.resources import TodoListAPI, TodoAPI
+api.add_resource(TodoListAPI, '/todos', endpoint='todos')
+api.add_resource(TodoAPI, '/todos/<int:id>', endpoint='todo')
