@@ -20,7 +20,7 @@ from api.users.models import *
 from api.polls.models import *
 
 # Load User Endpoints
-from api.users.resources import UserListAPI, UserAPI, UserAuthAPI
+from api.users.resources import UserListAPI, UserAPI, UserAuthAPI, UserPollsAPI
 api.add_resource(UserListAPI, '/users', endpoint='users')
 api.add_resource(UserAPI, '/users/<username>', endpoint='user')
 api.add_resource(UserAuthAPI, '/users/authenticate', endpoint='user_auth')
@@ -44,3 +44,5 @@ api.add_resource(
 )
 
 api.add_resource(ChoiceAPI, '/choices/<int:id>', endpoint="choice")
+
+api.add_resource(UserPollsAPI, '/user/<username>/polls', endpoint='user_polls')

@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse, abort
 from api.users.models import User
 from api.users.schemas import UserSchema
+from api.polls.schemas import PollSchema
 from api.utils.decorators import use_schema
 
 
@@ -60,6 +61,14 @@ class UserAPI(Resource):
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
         return user, 200
+
+
+class UserPollsAPI(Resource):
+    @use_schema(PollSchema, many=True)
+    def get(self, username):
+        user = User.get_by_or_abort404(username=username)
+        polls = user.polls.all()
+        return polls, 200
 
 
 class UserAuthAPI(Resource):
