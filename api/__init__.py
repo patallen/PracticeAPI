@@ -17,32 +17,10 @@ def after_request(response):
     return response
 
 from api.users.models import *
-from api.polls.models import *
+from api.todos.models import *
 
 # Load User Endpoints
-from api.users.resources import UserListAPI, UserAPI, UserAuthAPI, UserPollsAPI
+from api.users.resources import UserListAPI, UserAPI, UserAuthAPI
 api.add_resource(UserListAPI, '/users', endpoint='users')
 api.add_resource(UserAPI, '/users/<username>', endpoint='user')
 api.add_resource(UserAuthAPI, '/users/authenticate', endpoint='user_auth')
-
-# Load Poll/Choice Endpoints
-from api.polls.resources import (
-    PollAPI, PollListAPI, PollChoiceAPI, PollChoiceListAPI, ChoiceAPI
-)
-api.add_resource(PollListAPI, '/polls', endpoint='polls')
-api.add_resource(PollAPI, '/polls/<int:id>', endpoint='poll')
-
-api.add_resource(
-    PollChoiceAPI,
-    '/polls/<int:poll_id>/choices/<int:id>',
-    endpoint='poll_choice'
-)
-api.add_resource(
-    PollChoiceListAPI,
-    '/polls/<int:id>/choices',
-    endpoint='poll_choices'
-)
-
-api.add_resource(ChoiceAPI, '/choices/<int:id>', endpoint="choice")
-
-api.add_resource(UserPollsAPI, '/user/<username>/polls', endpoint='user_polls')

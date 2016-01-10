@@ -11,7 +11,7 @@ class User(BaseMixin, db.Model):
     _password_hash = db.Column(db.String(), nullable=False)
 
     # Ownership
-    polls = db.relationship('Poll', backref='user', lazy='dynamic')
+    polls = db.relationship('Todo', backref='user', lazy='dynamic')
 
     @property
     def is_active(self):
