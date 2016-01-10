@@ -5,41 +5,6 @@ from api.polls.schemas import PollSchema
 from api.utils.decorators import use_schema
 
 
-user_parser = reqparse.RequestParser()
-user_parser.add_argument(
-    'username',
-    dest='username',
-    location='form',
-    required=True
-)
-user_parser.add_argument(
-    'email',
-    dest='email',
-    location='form',
-    required=True
-)
-user_parser.add_argument(
-    'password',
-    dest='password',
-    location='form',
-    required=True
-)
-
-signin_parser = reqparse.RequestParser()
-signin_parser.add_argument(
-    'username',
-    dest='username',
-    location='form',
-    required=True
-)
-signin_parser.add_argument(
-    'password',
-    dest='password',
-    location='form',
-    required=True
-)
-
-
 class UserListAPI(Resource):
     @use_schema(UserSchema, many=True)
     def get(self):
@@ -61,14 +26,6 @@ class UserAPI(Resource):
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
         return user, 200
-
-
-class UserPollsAPI(Resource):
-    @use_schema(PollSchema, many=True)
-    def get(self, username):
-        user = User.get_by_or_abort404(username=username)
-        polls = user.polls.all()
-        return polls, 200
 
 
 class UserAuthAPI(Resource):
