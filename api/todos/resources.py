@@ -30,3 +30,10 @@ class TodoAPI(Resource):
     def get(self, id):
         todo = Todo.get_or_abort404(id)
         return todo, 200
+
+    @use_schema(TodoSchema, many=False)
+    def put(self, id):
+        args = todo_parser.parse_args()
+        todo = Todo.get_or_abort404(id)
+        todo.text = args.text
+        return todo, 200
