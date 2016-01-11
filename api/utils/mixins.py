@@ -26,9 +26,9 @@ class BaseMixin(object):
         return rv[0]
 
     @classmethod
-    def filter(cls, **kwargs):
+    def filter(cls, single=False, **kwargs):
         query = cls.query.filter_by(**kwargs)
-        if kwargs.get('single', False):
+        if single:
             return query.first()
         return query.all()
 
