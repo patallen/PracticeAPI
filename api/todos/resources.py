@@ -28,5 +28,5 @@ class TodoListAPI(Resource):
 class TodoAPI(Resource):
     @use_schema(TodoSchema, many=False)
     def get(self, id):
-        todo = Todo.query.get(id)
+        todo = Todo.get_or_abort404(id)
         return todo, 200
