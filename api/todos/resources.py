@@ -37,3 +37,8 @@ class TodoAPI(Resource):
         todo = Todo.get_or_abort404(id)
         todo.text = args.text
         return todo, 200
+
+    def delete(self, id):
+        todo = Todo.get_or_abort404(id)
+        todo.delete()
+        return {}, 200
