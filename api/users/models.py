@@ -22,6 +22,10 @@ class User(BaseMixin, db.Model):
         return self.authenticated
 
     @property
+    def is_anonymous(self):
+        return False
+    
+    @property
     def password(self):
         return self._password_hash.encode('UTF-8')
 
@@ -59,7 +63,7 @@ class AnonymousUserMixin(object):
         return False
 
     @property
-    def is_anonymousu(self):
+    def is_anonymous(self):
         return True
 
     def get_id(self):
