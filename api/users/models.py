@@ -18,6 +18,10 @@ class User(BaseMixin, db.Model):
         return self.active
 
     @property
+    def is_authenticated(self):
+        return self.authenticated
+
+    @property
     def password(self):
         return self._password_hash.encode('UTF-8')
 
@@ -33,6 +37,9 @@ class User(BaseMixin, db.Model):
             password.encode('UTF-8'), self.password
         ) == self.password
 
+    def get_id(self):
+        return self.id
+
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
@@ -40,3 +47,21 @@ class User(BaseMixin, db.Model):
 
     def __repr__(self):
         return "<User: {}>".format(self.username)
+
+
+class AnonymousUserMixin(object):
+    @property
+    def is_active(self):
+        return False
+
+    @property
+    def is_authenticated(self):
+        return False
+
+    @property
+    def is_anonymousu(self):
+        return True
+
+    def get_id(self):
+        return None
+    
