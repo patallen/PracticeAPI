@@ -3,6 +3,19 @@ from api.users.models import User
 from api.users.schemas import UserSchema
 from api.utils.decorators import use_schema
 
+user_parser = reqparse.RequestParser()
+user_parser.add_argument(
+    'email',
+    type=str
+)
+user_parser.add_argument(
+    'username',
+    type=str
+)
+user_parser.add_argument(
+    'password',
+    type=str
+)
 
 class UserListAPI(Resource):
     @use_schema(UserSchema, many=True)
