@@ -20,7 +20,7 @@ user_parser.add_argument(
 class UserListAPI(Resource):
     @use_schema(UserSchema, many=True)
     def get(self):
-        return User.query.all()
+        return User.query.all(), 200
 
     @use_schema(UserSchema, many=False)
     def post(self):
@@ -46,5 +46,5 @@ class UserAuthAPI(Resource):
         user = User.filter(username=args.username)[0]
         if user:
             if user.verify_password(args.password):
-                return {"token": "Bearer thisisatokenher"}
+                return {"token": "Bearer thisisatokenher"}, 200
         abort(403, "Incorrect username or password.")
