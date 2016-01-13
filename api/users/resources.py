@@ -38,6 +38,11 @@ class UserAPI(Resource):
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
         return user, 200
+        
+    def delete(self, username):
+        user = User.get_by_or_abort404(username)
+        user.delete()
+        return {}, 200
 
 
 class UserAuthAPI(Resource):
