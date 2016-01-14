@@ -4,9 +4,11 @@ env.use_ssh_config = True
 env.user = "vagrant"
 env.host = "10.10.10.6"
 
+app_name = "api"
+
 connection = "%s@%s" % (env.user, env.host)
-virtualenv = "/var/apienv"
-root = "/var/api"
+virtualenv = "/var/%senv" % app_name
+root = "/var/%s" % app_name
 
 
 @hosts(connection)
@@ -25,3 +27,10 @@ def manage(task):
 def db(task):
     with cd(root):
         run("%s/bin/python manage.py db %s" % (virtualenv, task))
+
+@hosts(connection)
+def setup_db():
+	sudo("apt-get install postgresql postgresql-contrib -y")
+	run("sudo -u postgres createuser --superuser vagrant")
+	run("sudo -u postgres psql -c \"ALTER USER vagrant WITH PASSWORD 'vagrant';\"")
+	run("sudo -u vagrant createdb -O vagrant apidb")
