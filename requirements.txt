@@ -19,6 +19,7 @@ marshmallow-jsonapi==0.4.2
 path.py==8.1.2
 pexpect==4.0.1
 pickleshare==0.5
+psycopg2==2.6.1
 ptyprocess==0.5
 pycparser==2.14
 python-dateutil==2.4.2
