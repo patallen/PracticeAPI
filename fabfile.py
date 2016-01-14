@@ -30,7 +30,7 @@ def db(task):
 
 @hosts(connection)
 def setup_db():
-	sudo("apt-get install postgresql postgresql-contrib -y")
+	sudo("apt-get install postgresql-server-dev-all postgresql postgresql-contrib -y")
 	run("sudo -u postgres createuser --superuser vagrant")
 	run("sudo -u postgres psql -c \"ALTER USER vagrant WITH PASSWORD 'vagrant';\"")
 	run("sudo -u vagrant createdb -O vagrant apidb")
