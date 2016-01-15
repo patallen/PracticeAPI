@@ -46,4 +46,11 @@ def setup_db():
 
 @hosts(connection)
 def apt_install():
+	sudo("apt-get update -y")
 	sudo("apt-get install %s -y" % " ".join(apt_packages))
+
+
+@hosts(connection)
+def apt_upgrade():
+	sudo("apt-get update -y")
+	sudo("apt-get dist-upgrade -y")
