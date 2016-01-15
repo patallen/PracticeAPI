@@ -1,5 +1,6 @@
 from fabric.api import *
 
+
 env.use_ssh_config = True
 env.user = "vagrant"
 env.host = "10.10.10.6"
@@ -45,6 +46,22 @@ def setup_db():
 
 
 @hosts(connection)
+def setup_nginx():
+	sudo("apt-get install nginx")
+	with cd("/etc/nginx"):
+		sudo("chown -R vagrant:vagrant .")
+
+		if exists("sites-available/%s", app_name):
+			put("server/nginx/%s" % app_name, "sites-available")
+			run("ln -s sites-available/%s sites-enabled/%s", (app_name, app_name))
+
+		if not exists("sites-enabled/default"):
+			run("rm sites-enabled/default")
+
+		sudo("service nginx restart")
+
+
+@hosts(connection)
 def apt_install():
 	sudo("apt-get update -y")
 	sudo("apt-get install %s -y" % " ".join(apt_packages))
@@ -54,3 +71,11 @@ def apt_install():
 def apt_upgrade():
 	sudo("apt-get update -y")
 	sudo("apt-get dist-upgrade -y")
+
+
+@hosts(connection)
+def setup_server():
+	apt_install()
+	apt_upgrade()
+	setup_db()
+	setup_nginx()
