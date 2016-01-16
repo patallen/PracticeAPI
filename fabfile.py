@@ -69,12 +69,14 @@ def setup_nginx():
     with cd("/etc/nginx"):
         sudo("chown -R vagrant:vagrant .")
 
-        if exists("sites-available/%s", app_name):
+        if not exists("sites-available/%s", app_name):
+            print "Creating api config."
             put("server/nginx/%s" % app_name, "sites-available")
-            run("ln -s sites-available/%s sites-enabled/%s" % (app_name, app_name))
+            run("ln -s /etc/nginx/sites-available/%s /etc/nginx/sites-enabled/%s" % (app_name, app_name))
 
-        if exists("sites-enabled/default"):
-            run("rm sites-enabled/default")
+        if exists("sites-available/default"):
+            print "Removing default nginx configuration."
+            run("rm sites-available/default")
 
         sudo("service nginx restart")
 
