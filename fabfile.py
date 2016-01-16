@@ -15,7 +15,7 @@ apt_packages = [
     'gcc',
     'libncurses5-dev',
     'libffi-dev',
-    'build-essential'
+    'build-essential',
     'python-pip',
     'postgresql',
     'nginx',
