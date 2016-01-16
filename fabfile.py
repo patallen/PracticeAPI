@@ -1,4 +1,5 @@
 from fabric.api import *
+from fabric.contrib.files import exists
 
 
 env.use_ssh_config = True
