@@ -73,7 +73,7 @@ def setup_nginx():
             put("server/nginx/%s" % app_name, "sites-available")
             run("ln -s sites-available/%s sites-enabled/%s" % (app_name, app_name))
 
-        if not exists("sites-enabled/default"):
+        if exists("sites-enabled/default"):
             run("rm sites-enabled/default")
 
         sudo("service nginx restart")
