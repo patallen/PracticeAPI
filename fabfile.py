@@ -100,3 +100,4 @@ def setup_server():
     setup_virtualenv()
     setup_nginx()
     setup_db()
+    db("upgrade")
