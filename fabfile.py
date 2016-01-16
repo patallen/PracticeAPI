@@ -13,17 +13,20 @@ virtualenv = "/var/%senv" % app_name
 root = "/var/%s" % app_name
 
 apt_packages = [
+    'python-dev',
     'gcc',
     'libncurses5-dev',
     'libffi-dev',
     'build-essential',
     'python-pip',
     'postgresql',
+    'libpq-dev',
     'nginx',
     'htop',
     'vim',
     'redis-server',
 ]
+
 
 @hosts(connection)
 def runserver(host="0.0.0.0"):
@@ -44,6 +47,15 @@ def db(task):
 
 
 @hosts(connection)
+def setup_virtualenv():
+    if not exists(virtualenv):
+        sudo("pip install virtualenv")
+        run("sudo virtualenv %s" % virtualenv)
+    sudo("chown -R vagrant:vagrant %s" % virtualenv)
+    run("%s/bin/pip install -r  %s/requirements.txt" % (virtualenv, root))
+
+
+@hosts(connection)
 def setup_db():
     sudo("apt-get install postgresql-server-dev-all postgresql postgresql-contrib -y")
     run("sudo -u postgres createuser --superuser vagrant")
@@ -59,7 +71,7 @@ def setup_nginx():
 
         if exists("sites-available/%s", app_name):
             put("server/nginx/%s" % app_name, "sites-available")
-            run("ln -s sites-available/%s sites-enabled/%s", (app_name, app_name))
+            run("ln -s sites-available/%s sites-enabled/%s" % (app_name, app_name))
 
         if not exists("sites-enabled/default"):
             run("rm sites-enabled/default")
@@ -83,5 +95,6 @@ def apt_upgrade():
 def setup_server():
     apt_install()
     apt_upgrade()
-    setup_db()
+    setup_virtualenv()
     setup_nginx()
+    setup_db()
