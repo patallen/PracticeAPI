@@ -1,8 +1,8 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, abort
 from api.todos.models import Todo
 from api.todos.schemas import TodoSchema
 from api.utils.decorators import use_schema
-from flask_jwt import jwt_required
+from flask_jwt import jwt_required, current_identity
 
 todo_parser = reqparse.RequestParser()
 todo_parser.add_argument(
@@ -20,12 +20,15 @@ class TodoListAPI(Resource):
 
     @use_schema(TodoSchema, many=True)
     def get(self):
-        return Todo.query.all(), 200
+        todos = current_identity.todos.all()
+        return todos, 200
 
-    @use_schema(TodoSchema, many=False)s
+    @use_schema(TodoSchema, many=False)
     def post(self):
         args = todo_parser.parse_args()
         todo = Todo.create(text=args.text)
+        current_identity.todos.append(todo)
+        current_identity.save()
         return todo, 201
 
 
@@ -34,17 +37,17 @@ class TodoAPI(Resource):
 
     @use_schema(TodoSchema, many=False)
     def get(self, id):
-        todo = Todo.get_or_abort404(id)
+        todo = current_identity.todos.filter_by(id=id).first()
         return todo, 200
 
     @use_schema(TodoSchema, many=False)
     def put(self, id):
         args = todo_parser.parse_args()
-        todo = Todo.get_or_abort404(id)
+        todo = current_identity.todos.filter_by(id=id).first()
         todo.text = args.text
         return todo, 200
 
     def delete(self, id):
-        todo = Todo.get_or_abort404(id)
+        todo = current_identity.todos.filter_by(id=id).first()
         todo.delete()
         return {}, 200
