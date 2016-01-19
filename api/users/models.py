@@ -24,7 +24,7 @@ class User(BaseMixin, db.Model):
     @property
     def is_anonymous(self):
         return False
-    
+
     @property
     def password(self):
         return self._password_hash.encode('UTF-8')
@@ -43,6 +43,17 @@ class User(BaseMixin, db.Model):
 
     def get_id(self):
         return self.id
+
+    @staticmethod
+    def authenticate(username, password):
+        user = User.get_or_abort404(username=username)
+        if user.verify_password(password):
+            return user
+
+    @staticmethod
+    def identity(payload):
+        username = payload['identity']
+        return User.query.filter_by(username=username).first()
 
     def __init__(self, username, email, password):
         self.username = username
@@ -68,4 +79,3 @@ class AnonymousUserMixin(object):
 
     def get_id(self):
         return None
-    

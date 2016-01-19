@@ -1,15 +1,16 @@
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_jwt import JWT
 
 app = Flask(__name__)
 app.config.from_object('config')
 
+api = Api(app)
 db = SQLAlchemy(app)
 
-api = Api(app)
-
+from api.users.models import User
+jwt = JWT(app, User.authenticate, User.identity)
 
 @app.after_request
 def after_request(response):
