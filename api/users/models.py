@@ -46,14 +46,14 @@ class User(BaseMixin, db.Model):
 
     @staticmethod
     def authenticate(username, password):
-        user = User.get_or_abort404(username=username)
+        user = User.get_by_or_abort404(username=username)
         if user.verify_password(password):
             return user
 
     @staticmethod
     def identity(payload):
-        username = payload['identity']
-        return User.query.filter_by(username=username).first()
+        user_id = payload['identity']
+        return User.query.get(user_id)
 
     def __init__(self, username, email, password):
         self.username = username
