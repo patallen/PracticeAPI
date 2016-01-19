@@ -17,6 +17,7 @@ user_parser.add_argument(
     type=str
 )
 
+
 class UserListAPI(Resource):
     @use_schema(UserSchema, many=True)
     def get(self):
@@ -38,7 +39,7 @@ class UserAPI(Resource):
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
         return user, 200
-        
+
     def delete(self, username):
         user = User.get_by_or_abort404(username)
         user.delete()

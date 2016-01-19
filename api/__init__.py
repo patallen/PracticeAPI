@@ -12,6 +12,7 @@ db = SQLAlchemy(app)
 from api.users.models import User
 jwt = JWT(app, User.authenticate, User.identity)
 
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')

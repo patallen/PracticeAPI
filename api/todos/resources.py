@@ -1,8 +1,8 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import Resource, reqparse
 from api.todos.models import Todo
 from api.todos.schemas import TodoSchema
 from api.utils.decorators import use_schema
-from flask_jwt import jwt_required, current_identity
+from flask_jwt import jwt_required
 
 todo_parser = reqparse.RequestParser()
 todo_parser.add_argument(
@@ -14,6 +14,7 @@ todo_parser.add_argument(
     type=bool
 )
 
+
 class TodoListAPI(Resource):
     method_decorators = [jwt_required()]
 
@@ -21,8 +22,7 @@ class TodoListAPI(Resource):
     def get(self):
         return Todo.query.all(), 200
 
-
-    @use_schema(TodoSchema, many=False)
+    @use_schema(TodoSchema, many=False)s
     def post(self):
         args = todo_parser.parse_args()
         todo = Todo.create(text=args.text)

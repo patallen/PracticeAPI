@@ -1,6 +1,7 @@
 from api import db
 from api.utils.mixins import BaseMixin
 
+
 class Todo(BaseMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(80))
