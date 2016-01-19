@@ -3,6 +3,8 @@ from fabric.contrib.files import exists
 
 
 env.use_ssh_config = True
+env.warn_only = True
+
 env.user = "vagrant"
 env.host = "10.10.10.6"
 
