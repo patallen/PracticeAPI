@@ -46,7 +46,8 @@ class User(BaseMixin, db.Model):
 
     @staticmethod
     def authenticate(username, password):
-        user = User.get_by_or_abort404(username=username)
+        if username and password:
+            user = User.get_by_or_abort404(username=username)
         if user.verify_password(password):
             return user
 
