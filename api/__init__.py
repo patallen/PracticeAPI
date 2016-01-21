@@ -27,10 +27,9 @@ from api.users.models import *
 from api.todos.models import *
 
 # Load User Endpoints
-from api.users.resources import UserListAPI, UserAPI, UserAuthAPI
+from api.users.resources import UserListAPI, UserAPI
 api.add_resource(UserListAPI, '/users', endpoint='users')
 api.add_resource(UserAPI, '/users/<username>', endpoint='user')
-api.add_resource(UserAuthAPI, '/users/authenticate', endpoint='user_auth')
 
 # Load Todo Endpoints
 from api.todos.resources import TodoListAPI, TodoAPI

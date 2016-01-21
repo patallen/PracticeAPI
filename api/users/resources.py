@@ -47,15 +47,3 @@ class UserAPI(Resource):
         user = User.get_by_or_abort404(username)
         user.delete()
         return {}, 200
-
-
-class UserAuthAPI(Resource):
-    def post(self):
-        args = user_parser.parse_args()j
-        username = args.username
-        password = args.password
-        identity = jwt.authentication_callback(username, password)
-        if identity:
-            access_token = jwt.jwt_encode_callback(identity)
-            return jwt.auth_response_callback(access_token, identity)
-        raise JWTError('Bad Request', 'Invalid credentials')
