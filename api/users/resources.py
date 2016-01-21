@@ -1,4 +1,7 @@
+from flask import request
 from flask_restful import Resource, reqparse, abort
+from flask_jwt import JWTError
+from api import jwt
 from api.users.models import User
 from api.users.schemas import UserSchema
 from api.utils.decorators import use_schema
@@ -48,9 +51,11 @@ class UserAPI(Resource):
 
 class UserAuthAPI(Resource):
     def post(self):
-        args = signin_parser.parse_args()
-        user = User.filter(username=args.username)[0]
-        if user:
-            if user.verify_password(args.password):
-                return {"token": "Bearer thisisatokenher"}, 200
-        abort(403, "Incorrect username or password.")
+        args = user_parser.parse_args()j
+        username = args.username
+        password = args.password
+        identity = jwt.authentication_callback(username, password)
+        if identity:
+            access_token = jwt.jwt_encode_callback(identity)
+            return jwt.auth_response_callback(access_token, identity)
+        raise JWTError('Bad Request', 'Invalid credentials')
