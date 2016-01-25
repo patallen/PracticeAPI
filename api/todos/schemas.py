@@ -1,4 +1,6 @@
 from marshmallow_jsonapi import Schema, fields
+from marshmallow import post_load
+from api.todos.models import Todo
 
 
 class TodoSchema(Schema):
@@ -9,3 +11,7 @@ class TodoSchema(Schema):
     class Meta:
         type_ = 'todos'
         strict = True
+
+    @post_load
+    def make_todo(self, data):
+        return Todo(**data)

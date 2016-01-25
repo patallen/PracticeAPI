@@ -1,32 +1,24 @@
 from flask_restful import Resource, reqparse, abort
 from api.todos.models import Todo
 from api.todos.schemas import TodoSchema
-from api.utils.decorators import use_schema
+from api.utils.decorators import use_class_schema
 from flask_jwt import jwt_required, current_identity
-
-todo_parser = reqparse.RequestParser()
-todo_parser.add_argument(
-    'text',
-    type=str
-)
-todo_parser.add_argument(
-    'completed',
-    type=bool
-)
+from flask import request
+import json
 
 
 class TodoListAPI(Resource):
     method_decorators = [jwt_required()]
+    schema = TodoSchema()
 
-    @use_schema(TodoSchema, many=True)
+    @use_class_schema(many=True)
     def get(self):
         todos = current_identity.todos.all()
         return todos, 200
 
-    @use_schema(TodoSchema, many=False)
+    @use_class_schema(many=False)
     def post(self):
-        args = todo_parser.parse_args()
-        todo = Todo.create(text=args.text)
+        todo = self.schema.load(request.get_json()).data
         current_identity.todos.append(todo)
         current_identity.save()
         return todo, 201
@@ -34,13 +26,14 @@ class TodoListAPI(Resource):
 
 class TodoAPI(Resource):
     method_decorators = [jwt_required()]
+    schema = TodoSchema()
 
-    @use_schema(TodoSchema, many=False)
+    @use_class_schema(many=False)
     def get(self, id):
         todo = current_identity.todos.filter_by(id=id).first()
         return todo, 200
 
-    @use_schema(TodoSchema, many=False)
+    @use_class_schema(many=False)
     def put(self, id):
         args = todo_parser.parse_args()
         todo = current_identity.todos.filter_by(id=id).first()
