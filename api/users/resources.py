@@ -1,10 +1,10 @@
 from flask import request
-from flask_restful import Resource, reqparse, abort
-from flask_jwt import JWTError
+from flask_restful import Resource, reqparse
 from api import jwt
 from api.users.models import User
 from api.users.schemas import UserSchema
 from api.utils.decorators import use_schema
+
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument(
@@ -47,3 +47,13 @@ class UserAPI(Resource):
         user = User.get_by_or_abort404(username)
         user.delete()
         return {}, 200
+
+
+class TokenRefreshAPI(Resource):
+    def post(self):
+        data = request.get_json()
+        token = data.get('access_token')
+        payload = jwt.jwt_decode_callback(token)
+        identity = jwt.identity_callback(payload)
+        new_token = jwt.jwt_encode_callback(identity)
+        return jwt.auth_response_callback(new_token, identity)
