@@ -47,7 +47,9 @@ class User(BaseMixin, db.Model):
     @staticmethod
     def authenticate(username, password):
         if username and password:
-            user = User.get_by_or_abort404(username=username)
+            user = User.query.filter_by(username=username).first()
+            if user is None:
+                user = DummyUser()
         if user.verify_password(password):
             return user
 
@@ -63,6 +65,11 @@ class User(BaseMixin, db.Model):
 
     def __repr__(self):
         return "<User: {}>".format(self.username)
+
+
+class DummyUser(object):
+    def verify_password(self, password):
+        return False
 
 
 class AnonymousUserMixin(object):
