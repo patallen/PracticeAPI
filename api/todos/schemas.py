@@ -1,5 +1,6 @@
 from marshmallow_jsonapi import Schema, fields
 from marshmallow import post_load
+
 from api.todos.models import Todo
 
 

@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+
 from api.users.models import User
 from api.users.schemas import UserSchema
 from api.utils.decorators import use_schema

@@ -1,6 +1,7 @@
+import bcrypt
+
 from api import db
 from api.utils.mixins import BaseMixin
-import bcrypt
 
 
 class User(BaseMixin, db.Model):

@@ -1,5 +1,6 @@
-from api import db
 from flask_restful import abort
+
+from api import db
 
 
 class BaseMixin(object):

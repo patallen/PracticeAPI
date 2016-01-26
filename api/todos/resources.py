@@ -1,10 +1,9 @@
-from flask_restful import Resource, reqparse, abort
-from api.todos.models import Todo
+from flask import request
+from flask_jwt import jwt_required, current_identity
+from flask_restful import Resource
+
 from api.todos.schemas import TodoSchema
 from api.utils.decorators import use_class_schema
-from flask_jwt import jwt_required, current_identity
-from flask import request
-import json
 
 
 class TodoListAPI(Resource):
@@ -35,9 +34,9 @@ class TodoAPI(Resource):
 
     @use_class_schema(many=False)
     def put(self, id):
-        args = todo_parser.parse_args()
+        data = self.schema.load(request.get_json()).data
         todo = current_identity.todos.filter_by(id=id).first()
-        todo.text = args.text
+        todo.text = data.text
         return todo, 200
 
     def delete(self, id):
