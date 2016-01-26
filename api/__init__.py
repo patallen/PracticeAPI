@@ -27,12 +27,14 @@ from api.users.models import *
 from api.todos.models import *
 
 # Load User Endpoints
-from api.users.resources import UserListAPI, UserAPI, TokenRefreshAPI
+from api.users.resources import UserListAPI, UserAPI
 api.add_resource(UserListAPI, '/users', endpoint='users')
 api.add_resource(UserAPI, '/users/<username>', endpoint='user')
-api.add_resource(TokenRefreshAPI, '/refresh-token', endpoint='token_refresh')
+# api.add_resource(TokenRefreshAPI, '/refresh-token', endpoint='token_refresh')
 
 # Load Todo Endpoints
 from api.todos.resources import TodoListAPI, TodoAPI
 api.add_resource(TodoListAPI, '/todos', endpoint='todos')
 api.add_resource(TodoAPI, '/todos/<int:id>', endpoint='todo')
+
+from api.jwt import make_payload
