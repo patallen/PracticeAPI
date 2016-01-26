@@ -55,8 +55,8 @@ class User(BaseMixin, db.Model):
 
     @staticmethod
     def identity(payload):
-        user_id = payload['identity']
-        return User.query.get(user_id)
+        username = payload['identity']
+        return User.query.filter_by(username=username).first()
 
     def __init__(self, username, email, password):
         self.username = username

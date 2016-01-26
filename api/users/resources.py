@@ -1,9 +1,10 @@
-from flask import request
+from flask import request, current_app
 from flask_restful import Resource, reqparse
 from api import jwt
 from api.users.models import User
 from api.users.schemas import UserSchema
 from api.utils.decorators import use_schema
+from datetime import datetime
 
 
 user_parser = reqparse.RequestParser()
@@ -57,3 +58,12 @@ class TokenRefreshAPI(Resource):
         identity = jwt.identity_callback(payload)
         new_token = jwt.jwt_encode_callback(identity)
         return jwt.auth_response_callback(new_token, identity)
+
+
+@jwt.jwt_payload_handler
+def make_payload(identity):
+    iat = datetime.utcnow()
+    exp = iat + current_app.config.get('JWT_EXPIRATION_DELTA')
+    nbf = iat + current_app.config.get('JWT_NOT_BEFORE_DELTA')
+    identity = getattr(identity, 'username') or identity['username']
+    return {'exp': exp, 'iat': iat, 'nbf': nbf, 'identity': identity}
