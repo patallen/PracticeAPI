@@ -67,18 +67,9 @@ class User(BaseMixin, db.Model):
         return "<User: {}>".format(self.username)
 
 
-class DummyUser(object):
-    def verify_password(self, password):
-        return False
-
-
 class AnonymousUserMixin(object):
     @property
     def is_active(self):
-        return False
-
-    @property
-    def is_authenticated(self):
         return False
 
     @property
@@ -87,3 +78,8 @@ class AnonymousUserMixin(object):
 
     def get_id(self):
         return None
+
+
+class DummyUser(AnonymousUserMixin):
+    def verify_password(self, password):
+        return False
