@@ -39,6 +39,16 @@ class TodoAPI(Resource):
         todo.text = data.text
         return todo, 200
 
+    @use_class_schema(many=False)
+    def patch(self, id):
+        data = self.schema.load(request.get_json()).data
+        todo = current_identity.todos.filter_by(id=id).first()
+        for key, val in data.__dict__.iteritems():
+            if key[0] != "_":
+                setattr(todo, key, val)
+        todo.save()
+        return todo, 200
+
     def delete(self, id):
         todo = current_identity.todos.filter_by(id=id).first()
         todo.delete()

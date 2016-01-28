@@ -20,7 +20,10 @@ def after_request(response):
         'Access-Control-Allow-Headers',
         'Content-Type,Authorization'
     )
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    response.headers.add(
+        'Access-Control-Allow-Methods',
+        'GET,PUT,POST,DELETE,PATCH'
+    )
     return response
 
 from api.users.models import *
