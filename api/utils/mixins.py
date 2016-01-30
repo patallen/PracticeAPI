@@ -42,3 +42,17 @@ class BaseMixin(object):
         db.session.delete(self)
         if commit:
             db.session.commit()
+
+    def to_dict(self, exclude=None, include_private=False):
+        dictionary = self.__dict__
+        if exclude is None:
+            exclude = []
+        rv = {}
+        for k, v in dictionary.iteritems():
+            if include_private:
+                rv[k] = v
+            else:
+                if k[0] != '_' and k not in exclude:
+                    rv[k] = v
+
+        return rv
