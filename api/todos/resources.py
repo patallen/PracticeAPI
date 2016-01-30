@@ -43,9 +43,8 @@ class TodoAPI(Resource):
     def patch(self, id):
         data = self.schema.load(request.get_json()).data
         todo = current_identity.todos.filter_by(id=id).first()
-        for key, val in data.__dict__.iteritems():
-            if key[0] != "_":
-                setattr(todo, key, val)
+        for key, val in data.to_dict().iteritems():
+            setattr(todo, key, val)
         todo.save()
         return todo, 200
 
