@@ -52,4 +52,4 @@ class TodoAPI(Resource):
     def delete(self, id):
         todo = current_identity.todos.filter_by(id=id).first()
         todo.delete()
-        return {}, 200
+        return {}, 204
