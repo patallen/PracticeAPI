@@ -45,14 +45,14 @@ class BaseMixin(object):
 
     def to_dict(self, exclude=None, include_private=False):
         dictionary = self.__dict__
-        if exclude is None:
-            exclude = []
+        exclude = [] if exclude is None else exclude
+
+        if include_private is False:
+            exclude += [k for k in dictionary if k[0] == '_']
+
         rv = {}
         for k, v in dictionary.iteritems():
-            if include_private:
+            if k not in exclude:
                 rv[k] = v
-            else:
-                if k[0] != '_' and k not in exclude:
-                    rv[k] = v
 
         return rv
