@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse
-
+from flask import request
 from api.users.models import User
 from api.users.schemas import UserSchema
-from api.utils.decorators import use_schema
+from api.utils.decorators import use_schema, use_class_schema
 
 
 user_parser = reqparse.RequestParser()
@@ -39,6 +39,8 @@ class UserListAPI(Resource):
 
 
 class UserAPI(Resource):
+    schema = UserSchema()
+
     @use_class_schema(many=False)
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
@@ -48,3 +50,23 @@ class UserAPI(Resource):
         user = User.get_by_or_abort404(username)
         user.delete()
         return {}, 204
+
+
+class UserSignupAPI(Resource):
+    schema = UserSchema()
+
+    @use_class_schema(many=False)
+    def post(self):
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        try:
+            user = User.create(
+                username=username,
+                password=password,
+                email=email
+            )
+        except:
+            return "Unable to process request.", 400
+        return user, 200

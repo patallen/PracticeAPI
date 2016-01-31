@@ -30,10 +30,10 @@ from api.users.models import *
 from api.todos.models import *
 
 # Load User Endpoints
-from api.users.resources import UserListAPI, UserAPI
+from api.users.resources import UserListAPI, UserAPI, UserSignupAPI
 api.add_resource(UserListAPI, '/users', endpoint='users')
 api.add_resource(UserAPI, '/users/<username>', endpoint='user')
-# api.add_resource(TokenRefreshAPI, '/refresh-token', endpoint='token_refresh')
+api.add_resource(UserSignupAPI, '/signup', endpoint='signup')
 
 # Load Todo Endpoints
 from api.todos.resources import TodoListAPI, TodoAPI
