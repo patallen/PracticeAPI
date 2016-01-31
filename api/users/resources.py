@@ -21,11 +21,13 @@ user_parser.add_argument(
 
 
 class UserListAPI(Resource):
-    @use_schema(UserSchema, many=True)
+    schema = UserSchema()
+
+    @use_class_schema(many=True)
     def get(self):
         return User.query.all(), 200
 
-    @use_schema(UserSchema, many=False)
+    @use_class_schema(many=False)
     def post(self):
         args = user_parser.parse_args()
         user = User.create(
@@ -37,7 +39,7 @@ class UserListAPI(Resource):
 
 
 class UserAPI(Resource):
-    @use_schema(UserSchema, many=False)
+    @use_class_schema(many=False)
     def get(self, username):
         user = User.get_by_or_abort404(username=username)
         return user, 200
@@ -45,4 +47,4 @@ class UserAPI(Resource):
     def delete(self, username):
         user = User.get_by_or_abort404(username)
         user.delete()
-        return {}, 200
+        return {}, 204
