@@ -33,7 +33,10 @@ apt_packages = [
 @hosts(connection)
 def runserver(host="0.0.0.0"):
     with cd(root):
-        run("%s/bin/python manage.py runserver -h %s" % (virtualenv, host))
+        run(
+            "%s/bin/python manage.py runserver -h %s" %
+            (virtualenv, host)
+        )
 
 
 @hosts(connection)
@@ -59,9 +62,11 @@ def setup_virtualenv():
 
 @hosts(connection)
 def setup_db():
-    sudo("apt-get install postgresql-server-dev-all postgresql postgresql-contrib -y")
+    sudo("apt-get install postgresql-server-dev-all "
+         "postgresql postgresql-contrib -y")
     run("sudo -u postgres createuser --superuser vagrant")
-    run("sudo -u postgres psql -c \"ALTER USER vagrant WITH PASSWORD 'vagrant';\"")
+    run("sudo -u postgres psql -c \"ALTER USER "
+        "vagrant WITH PASSWORD 'vagrant';\"")
     run("sudo -u vagrant createdb -O vagrant apidb")
 
 
@@ -74,7 +79,8 @@ def setup_nginx():
         if not exists("sites-available/%s", app_name):
             print "Creating api config."
             put("server/nginx/%s" % app_name, "sites-available")
-            run("ln -s /etc/nginx/sites-available/%s /etc/nginx/sites-enabled/%s" % (app_name, app_name))
+            run("ln -s /etc/nginx/sites-available/%s "
+                "/etc/nginx/sites-enabled/%s" % (app_name, app_name))
 
         if exists("sites-available/default"):
             print "Removing default nginx configuration."
