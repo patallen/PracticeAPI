@@ -80,6 +80,9 @@ class AnonymousUserMixin(object):
     def get_id(self):
         return None
 
+    def __repr__(self):
+        return "<Anonymous User>"
+
 
 class DummyUser(AnonymousUserMixin):
     def verify_password(self, password):
