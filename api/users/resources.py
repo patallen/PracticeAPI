@@ -1,23 +1,8 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from flask import request
 from api.users.models import User
 from api.users.schemas import UserSchema
-from api.utils.decorators import use_schema, use_class_schema
-
-
-user_parser = reqparse.RequestParser()
-user_parser.add_argument(
-    'email',
-    type=str
-)
-user_parser.add_argument(
-    'username',
-    type=str
-)
-user_parser.add_argument(
-    'password',
-    type=str
-)
+from api.utils.decorators import use_class_schema
 
 
 class UserListAPI(Resource):
@@ -26,16 +11,6 @@ class UserListAPI(Resource):
     @use_class_schema(many=True)
     def get(self):
         return User.query.all(), 200
-
-    @use_class_schema(many=False)
-    def post(self):
-        args = user_parser.parse_args()
-        user = User.create(
-            username=args.username,
-            email=args.email,
-            password=args.password,
-        )
-        return user, 201
 
 
 class UserAPI(Resource):
