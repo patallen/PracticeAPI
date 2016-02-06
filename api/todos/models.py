@@ -1,8 +1,8 @@
 from api import db
-from api.utils.mixins import BaseMixin
+from api.utils.mixins import BaseMixin, AuditMixin
 
 
-class TodoList(BaseMixin, db.Model):
+class TodoList(AuditMixin, BaseMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     user_id = db.Column(db.ForeignKey('user.id'))
@@ -11,7 +11,7 @@ class TodoList(BaseMixin, db.Model):
     todos = db.relationship('Todo', backref='todo_list', lazy='dynamic')
 
 
-class Todo(BaseMixin, db.Model):
+class Todo(AuditMixin, BaseMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(80))
     complete = db.Column(db.Boolean, default=False)

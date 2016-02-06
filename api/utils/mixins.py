@@ -1,5 +1,5 @@
 from flask_restful import abort
-
+from datetime import datetime
 from api import db
 
 
@@ -56,3 +56,12 @@ class BaseMixin(object):
                 rv[k] = v
 
         return rv
+
+
+class AuditMixin(object):
+    created_at = db.Column(db.DateTime, default=datetime.utcnow())
+    updated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow(),
+        onupdate=datetime.utcnow()
+    )
