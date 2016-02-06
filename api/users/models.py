@@ -11,8 +11,9 @@ class User(BaseMixin, db.Model):
     active = db.Column(db.Boolean, default=True)
     _password_hash = db.Column(db.String(), nullable=False)
 
-    # Ownership
+    # Relationships
     todos = db.relationship('Todo', backref='user', lazy='dynamic')
+    todo_lists = db.relationship('TodoList', backref='user', lazy='dynamic')
 
     @property
     def is_active(self):
