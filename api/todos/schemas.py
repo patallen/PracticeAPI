@@ -8,6 +8,8 @@ class TodoSchema(Schema):
     id = fields.Str(dump_only=True)
     text = fields.Str()
     complete = fields.Boolean()
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
 
     class Meta:
         type_ = 'todos'
