@@ -7,7 +7,7 @@ from api.todos.models import TodoList
 from api.utils.decorators import use_class_schema
 
 
-class TodoListsAPI(Resource):
+class ListsAPI(Resource):
     method_decorators = [jwt_required()]
     schema = TodoListSchema()
 
@@ -17,8 +17,8 @@ class TodoListsAPI(Resource):
         Return All TodoLists for User
         => GET /lists
         """
-        lists = current_identity.todo_lists.all()
-        return lists, 200
+        todo_lists = current_identity.todo_lists.all()
+        return todo_lists, 200
 
     @use_class_schema(many=False)
     def post(self):
@@ -61,7 +61,7 @@ class ListAPI(Resource):
     def delete(self, id):
         """
         Delete a TodoList and all of it's underlying todos.
-        => Delete /lists/<id>
+        => DELETE /lists/<id>
         """
         todo_list = TodoList.query.get(id)
         if todo_list in current_identity.todo_lists:
@@ -72,14 +72,15 @@ class ListAPI(Resource):
 
 
 class TodoListAPI(Resource):
-    """
-
-    """
     method_decorators = [jwt_required()]
     schema = TodoSchema()
 
     @use_class_schema(many=True)
     def get(self, id):
+        """
+        Retrieve all Todos for a specific TodoList
+        => GET /lists/<id>/todos
+        """
         todo_list = TodoList.query.get(id)
         if todo_list and todo_list.user is current_identity:
             return todo_list.todos.all(), 200
@@ -88,10 +89,18 @@ class TodoListAPI(Resource):
 
     @use_class_schema(many=False)
     def post(self):
-        todo = self.schema.load(request.get_json()).data
-        current_identity.todos.append(todo)
-        current_identity.save()
-        return todo, 201
+        """
+        Create a Todo for a specific TodoList
+        => POST /lists/<id>/todos
+        """
+        todo_list = TodoList.query.get(id)
+        if todo_list in current_identity.todo_lists:
+            todo = self.schema.load(request.get_json()).data
+            todo_list.todos.append(todo)
+            current_identity.save()
+            return todo, 201
+        else:
+            return {}, 404
 
 
 class TodoAPI(Resource):
