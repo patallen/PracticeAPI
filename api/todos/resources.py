@@ -3,6 +3,7 @@ from flask_jwt import jwt_required, current_identity
 from flask_restful import Resource
 
 from api.todos.schemas import TodoSchema, TodoListSchema
+from api.todos.models import TodoList
 from api.utils.decorators import use_class_schema
 
 
@@ -12,25 +13,78 @@ class TodoListsAPI(Resource):
 
     @use_class_schema(many=True)
     def get(self):
+        """
+        Return All TodoLists for User
+        => GET /lists
+        """
         lists = current_identity.todo_lists.all()
         return lists, 200
 
     @use_class_schema(many=False)
     def post(self):
+        """
+        Add a new TodoList for User
+        => POST /lists
+        """
         todo_list = self.schema.load(request.get_json()).data
         current_identity.todo_lists.append(todo_list)
         current_identity.save()
         return todo_list, 200
 
 
+class ListAPI(Resource):
+    method_decorators = [jwt_required()]
+    schema = TodoListSchema()
+
+    @use_class_schema(many=False)
+    def get(self, id):
+        """
+        Return info on a single TodoList (not the todos within)
+        => GET /lists/<id>
+        """
+        todo_list = TodoList.query.get(id)
+        return todo_list, 400
+
+    @use_class_schema(many=False)
+    def patch(self, id):
+        """
+        Edit the information of a single TodoList (not the todos)
+        => PATCH /lists/<id>
+        """
+        data = self.schema.load(request.get_json().data)
+        todo_list = TodoList.query.get(id)
+        todo_list.title = data.title
+        todo_list.save()
+        return todo_list, 400
+
+    @use_class_schema(many=False)
+    def delete(self, id):
+        """
+        Delete a TodoList and all of it's underlying todos.
+        => Delete /lists/<id>
+        """
+        todo_list = TodoList.query.get(id)
+        if todo_list in current_identity.todo_lists:
+            todo_list.delete()
+            return {}, 204
+        else:
+            return {}, 404
+
+
 class TodoListAPI(Resource):
+    """
+
+    """
     method_decorators = [jwt_required()]
     schema = TodoSchema()
 
     @use_class_schema(many=True)
-    def get(self):
-        todos = current_identity.todos.all()
-        return todos, 200
+    def get(self, id):
+        todo_list = TodoList.query.get(id)
+        if todo_list and todo_list.user is current_identity:
+            return todo_list.todos.all(), 200
+        else:
+            return {}, 404
 
     @use_class_schema(many=False)
     def post(self):
