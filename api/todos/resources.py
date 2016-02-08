@@ -2,8 +2,23 @@ from flask import request
 from flask_jwt import jwt_required, current_identity
 from flask_restful import Resource
 
-from api.todos.schemas import TodoSchema
+from api.todos.schemas import TodoSchema, TodoListSchema
 from api.utils.decorators import use_class_schema
+
+
+class TodoListsAPI(Resource):
+    method_decorators = [jwt_required()]
+    schema = TodoListSchema()
+
+    @use_class_schema(many=True)
+    def get(self):
+        lists = current_identity.todo_lists.all()
+        return lists, 200
+
+    def post(self):
+        todo_list = self.schema.load(request.get_json()).data
+        current_identity.todo_lists.append(todo_list)
+        return todo_list, 200
 
 
 class TodoListAPI(Resource):
