@@ -15,9 +15,11 @@ class TodoListsAPI(Resource):
         lists = current_identity.todo_lists.all()
         return lists, 200
 
+    @use_class_schema(many=False)
     def post(self):
         todo_list = self.schema.load(request.get_json()).data
         current_identity.todo_lists.append(todo_list)
+        current_identity.save()
         return todo_list, 200
 
 
