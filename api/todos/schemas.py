@@ -27,7 +27,7 @@ class TodoListSchema(Schema):
     updated_at = fields.DateTime(dump_only=True)
 
     class Meta:
-        type_ = 'todo_lists'
+        type_ = 'lists'
         strict = True
 
     @post_load
