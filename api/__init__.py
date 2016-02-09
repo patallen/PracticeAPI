@@ -36,10 +36,11 @@ api.add_resource(UserAPI, '/users/<username>', endpoint='user')
 api.add_resource(UserSignupAPI, '/signup', endpoint='signup')
 
 # Load Todo Endpoints
-from api.todos.resources import TodoListAPI, TodoAPI, TodoListsAPI
+from api.todos.resources import TodoListAPI, TodoAPI, ListsAPI, ListAPI
 api.add_resource(TodoAPI, '/todos/<int:id>', endpoint='todo')
-api.add_resource(TodoListsAPI, '/todo_lists', endpoint='todo_lists')
+api.add_resource(ListsAPI, '/lists', endpoint='todo_lists')
+api.add_resource(ListAPI, '/lists/<int:id>', endpoint='todo_list')
 
-api.add_resource(TodoListAPI, '/lists/<int:id>/todos', endpoint='todo_list')
+api.add_resource(TodoListAPI, '/lists/<int:id>/todos', endpoint='list_todos')
 
 from api.jwt import make_payload
